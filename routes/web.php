@@ -17,4 +17,5 @@ use App\Mail\MensagemTesteMail;
 Auth::routes(['verify' => true]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 Route::resource('tarefa', App\Http\Controllers\TarefaController::class);

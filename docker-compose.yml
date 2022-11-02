@@ -2,7 +2,7 @@ version: "3.8"
 services:
     database:
         image: mysql:8.0
-        container_name: 'mysql'
+        container_name: 'controle-tarefas_mysql'
         ports:
             - "3306:3306"
         command: --default-authentication-plugin=mysql_native_password
