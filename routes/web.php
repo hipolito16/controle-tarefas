@@ -16,6 +16,13 @@ use App\Mail\MensagemTesteMail;
 
 Auth::routes(['verify' => true]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [\App\Http\Controllers\TarefaController::class, 'index']);
 
-Route::resource('tarefa', App\Http\Controllers\TarefaController::class);
+//Route::get('/', [\App\Http\Controllers\HomeController::class, 'index']);
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+//    ->name('home')
+//    ->middleware('verified');
+
+Route::resource('tarefa', App\Http\Controllers\TarefaController::class)
+    ->middleware('verified');
