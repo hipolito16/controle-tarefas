@@ -11,7 +11,7 @@
                                 <label class="form-label">Data Limite Conclusão</label>
                                 <label class="form-control bg-secondary" style="--bs-bg-opacity: .1">{{ date('d/m/Y', strtotime($tarefa->data_limite_conclusao)) }}</label>
                             </div>
-                        <a href="{{ url()->previous() }}" class="btn btn-primary">Voltar</a>
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary">Voltar</a>
                         @if(session('success'))
                             <div class="alert alert-success mt-3 text-center">{{ session('success') }}</div>
                         @endif

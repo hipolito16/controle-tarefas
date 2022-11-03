@@ -21,7 +21,7 @@
                                     <td>{{ $tarefa->tarefa }}</td>
                                     <td>{{ date('d/m/Y', strtotime($tarefa->data_limite_conclusao)) }}</td>
                                     <td><a href="{{ route('tarefa.show', ['tarefa' => $tarefa->id]) }}" class="text-decoration-none icofont-eye-alt"></a></td>
-                                    <td><a href="" class="text-decoration-none icofont-ui-edit"></a></td>
+                                    <td><a href="{{ route('tarefa.edit', ['tarefa' => $tarefa->id]) }}" class="text-decoration-none icofont-ui-edit"></a></td>
                                     <td><a href="" class="text-decoration-none icofont-ui-delete"></a></td>
                                 </tr>
                             @endforeach
