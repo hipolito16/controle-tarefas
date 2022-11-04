@@ -20,22 +20,40 @@
                                 <tr>
                                     <td>{{ $tarefa->tarefa }}</td>
                                     <td>{{ date('d/m/Y', strtotime($tarefa->data_limite_conclusao)) }}</td>
-                                    <td><a href="{{ route('tarefa.show', ['tarefa' => $tarefa->id]) }}" class="text-decoration-none icofont-eye-alt"></a></td>
-                                    <td><a href="{{ route('tarefa.edit', ['tarefa' => $tarefa->id]) }}" class="text-decoration-none icofont-ui-edit"></a></td>
-                                    <td><a href="" class="text-decoration-none icofont-ui-delete"></a></td>
+                                    <td><a href="{{ route('tarefa.show', ['tarefa' => $tarefa]) }}"
+                                           class="text-decoration-none icofont-eye-alt"></a></td>
+                                    <td><a href="{{ route('tarefa.edit', ['tarefa' => $tarefa]) }}"
+                                           class="text-decoration-none icofont-ui-edit"></a></td>
+                                    <td>
+                                        <form id="form_{{ $tarefa->id }}"
+                                              action="{{ route('tarefa.destroy', ['tarefa' => $tarefa]) }}"
+                                              method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <a href="#"
+                                               onclick="document.getElementById('form_{{ $tarefa->id }}').submit()"
+                                               class="text-decoration-none icofont-ui-delete"></a>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
                         <nav class="d-flex justify-content-center">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="{{ $tarefas->previousPageUrl() }}">Voltar</a></li>
+                                <li class="page-item"><a class="page-link" href="{{ $tarefas->previousPageUrl() }}">Voltar</a>
+                                </li>
                                 @for($i = 1; $i <= $tarefas->lastPage(); $i++)
-                                    <li class="page-item {{ $tarefas->currentPage() == $i ? 'active' : '' }}"><a class="page-link" href="{{ $tarefas->url($i) }}">{{ $i }}</a></li>
+                                    <li class="page-item {{ $tarefas->currentPage() == $i ? 'active' : '' }}"><a
+                                            class="page-link" href="{{ $tarefas->url($i) }}">{{ $i }}</a></li>
                                 @endfor
-                                <li class="page-item"><a class="page-link" href="{{ $tarefas->nextPageUrl() }}">Avançar</a></li>
+                                <li class="page-item"><a class="page-link"
+                                                         href="{{ $tarefas->nextPageUrl() }}">Avançar</a></li>
                             </ul>
                         </nav>
+                        @if(session('destroy'))
+                            <div class="alert alert-info mt-3 text-center">{{ session('destroy') }}</div>
+                        @endif
                     </div>
                 </div>
             </div>

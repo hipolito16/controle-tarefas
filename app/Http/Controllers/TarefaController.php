@@ -6,12 +6,16 @@ use App\Models\Tarefa;
 use App\Mail\NovaTarefaEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TarefasExport;
 
 class TarefaController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('verified');
     }
 
     /**
@@ -21,7 +25,7 @@ class TarefaController extends Controller
      */
     public function index()
     {
-        $tarefas = Tarefa::where('user_id', auth()->user()->id)->paginate(10);
+        $tarefas = Auth::user()->tarefas()->paginate(10);
         return view('tarefa.index', ['tarefas' => $tarefas]);
     }
 
@@ -47,16 +51,18 @@ class TarefaController extends Controller
         $request->validate($regras, $feedback);
 
         $tarefa = Tarefa::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::user()->id,
             'tarefa' => $request->tarefa,
             'data_limite_conclusao' => $request->data_limite_conclusao,
         ]);
 
-        $destinatario = auth()->user()->email;
-        Mail::to($destinatario)->send(new NovaTarefaEmail($tarefa));
+        $destinatario = Auth::user()->email;
 
-        return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id])
-            ->with(['success' => 'Tarefa cadastrada com sucesso!']);
+        // Envia o email toda vez que criar uma tarefas nova para o usuário **DESATIVEI PARA ACELERAR O SISTEMA**
+        // Mail::to($destinatario)->send(new NovaTarefaEmail($tarefa));
+
+        return redirect()->route('tarefa.show', ['tarefa' => $tarefa])
+            ->with(['store' => 'Tarefa cadastrada com sucesso!']);
     }
 
     /**
@@ -67,6 +73,10 @@ class TarefaController extends Controller
      */
     public function show(Tarefa $tarefa)
     {
+        if ($tarefa->user_id != Auth::user()->id) {
+            return view('acesso-negado');
+        }
+
         return view('tarefa.show', ['tarefa' => $tarefa]);
     }
 
@@ -78,6 +88,10 @@ class TarefaController extends Controller
      */
     public function edit(Tarefa $tarefa)
     {
+        if ($tarefa->user_id != Auth::user()->id) {
+            return view('acesso-negado');
+        }
+
         return view('tarefa.create', ['tarefa' => $tarefa]);
     }
 
@@ -90,7 +104,20 @@ class TarefaController extends Controller
      */
     public function update(Request $request, Tarefa $tarefa)
     {
-        //
+        if ($tarefa->user_id != Auth::user()->id) {
+            return view('acesso-negado');
+        }
+
+        $this->regrasAndFeedback($regras, $feedback);
+        $request->validate($regras, $feedback);
+
+        $tarefa->update([
+            'tarefa' => $request->tarefa,
+            'data_limite_conclusao' => $request->data_limite_conclusao,
+        ]);
+
+        return redirect()->route('tarefa.edit', ['tarefa' => $tarefa])
+            ->with(['update' => 'Tarefa atualizada com sucesso!']);
     }
 
     /**
@@ -101,7 +128,13 @@ class TarefaController extends Controller
      */
     public function destroy(Tarefa $tarefa)
     {
-        //
+        if ($tarefa->user_id != Auth::user()->id) {
+            return view('acesso-negado');
+        }
+
+        $tarefa->forceDelete();
+        return redirect()->route('tarefa.index')
+            ->with(['destroy' => 'Tarefa excluída com sucesso!']);
     }
 
     public function regrasAndFeedback(&$regras, &$feedback)
@@ -118,5 +151,9 @@ class TarefaController extends Controller
             'data_limite_conclusao.required' => 'A data limite de conclusão é obrigatória',
             'data_limite_conclusao.date' => 'A data limite de conclusão deve ser uma data válida',
         ];
+    }
+
+    public function exportacao($extensao) {
+        return Excel::download(new TarefasExport, "tarefas.$extensao");
     }
 }
