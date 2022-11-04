@@ -17,6 +17,7 @@ use App\Mail\MensagemTesteMail;
 Auth::routes(['verify' => true]);
 
 Route::get('/tarefa/exportacao/{extensao}', [App\Http\Controllers\TarefaController::class, 'exportacao'])->name('tarefa.exportacao');
+Route::get('/tarefa/exportacao2', [App\Http\Controllers\TarefaController::class, 'exportacao2'])->name('tarefa.exportacao2');
 Route::get('/', [\App\Http\Controllers\TarefaController::class, 'index']);
 
 Route::resource('tarefa', App\Http\Controllers\TarefaController::class);

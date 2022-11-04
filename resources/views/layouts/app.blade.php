@@ -39,8 +39,8 @@
                        href="{{ route('tarefa.exportacao', ['extensao' => 'xlsx']) }}">XLSX</a>
                     <a class="nav-link @if(!isset(Auth::user()->email_verified_at)) d-none @endif"
                         href="{{ route('tarefa.exportacao', ['extensao' => 'csv']) }}">CSV</a>
-{{--                    <a class="nav-link @if(!isset(Auth::user()->email_verified_at)) d-none @endif"--}}
-{{--                        href="{{ route('tarefa.exportacao', ['extensao' => 'pdf']) }}">PDF</a>--}}
+                    <a class="nav-link @if(!isset(Auth::user()->email_verified_at)) d-none @endif"
+                        href="{{ route('tarefa.exportacao2') }}" target="_blank">PDF</a>
                 </nav>
 
                 <!-- Right Side Of Navbar -->
