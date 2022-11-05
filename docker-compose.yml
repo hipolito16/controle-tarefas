@@ -1,14 +1,27 @@
 version: "3.8"
 services:
-    database:
+    controle-tarefas:
+        build: .
+        container_name: 'ct_php_apache'
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www/html/controle-tarefas/
+        networks:
+            - default
+    db:
         image: mysql:8.0
-        container_name: 'controle-tarefas_mysql'
+        container_name: 'ct_mysql'
         ports:
             - "3306:3306"
         command: --default-authentication-plugin=mysql_native_password
         environment:
-            MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: ct
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ./database/mysql:/var/lib/mysql
+        networks:
+            - default
 networks:
     default:
         driver: bridge
