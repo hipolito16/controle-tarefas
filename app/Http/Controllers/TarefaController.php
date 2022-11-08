@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TarefasExport;
 use PDF;
+use App\Http\Middleware\LogAtividadesMiddleware;
 
 class TarefaController extends Controller
 {
@@ -17,6 +18,7 @@ class TarefaController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('verified');
+        $this->middleware(LogAtividadesMiddleware::class);
     }
 
     /**
@@ -59,8 +61,7 @@ class TarefaController extends Controller
 
         $destinatario = Auth::user()->email;
 
-        // Envia o email toda vez que criar uma tarefas nova para o usuário **DESATIVEI PARA ACELERAR O SISTEMA**
-        // Mail::to($destinatario)->send(new NovaTarefaEmail($tarefa));
+        Mail::to($destinatario)->send(new NovaTarefaEmail($tarefa));
 
         return redirect()->route('tarefa.show', ['tarefa' => $tarefa])
             ->with(['store' => 'Tarefa cadastrada com sucesso!']);
@@ -127,7 +128,7 @@ class TarefaController extends Controller
      * @param \App\Models\Tarefa $tarefa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tarefa $tarefa)
+    public function destroy(Request $request, Tarefa $tarefa)
     {
         if ($tarefa->user_id != Auth::user()->id) {
             return view('acesso-negado');

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\LogAtividades;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -56,5 +57,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function tarefas()
     {
         return $this->hasMany(Tarefa::class, 'user_id', 'id');
+    }
+
+    public function logAtividades()
+    {
+        return $this->hasMany(LogAtividades::class, 'user_id', 'id');
     }
 }

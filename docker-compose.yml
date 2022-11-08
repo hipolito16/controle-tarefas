@@ -1,14 +1,14 @@
 version: "3.8"
 services:
-    controle-tarefas:
-        build: .
-        container_name: 'ct_php_apache'
-        ports:
-            - "80:80"
-        volumes:
-            - ./:/var/www/html/controle-tarefas/
-        networks:
-            - default
+#    controle-tarefas:
+#        build: .
+#        container_name: 'ct_php_apache'
+#        ports:
+#            - "80:80"
+#        volumes:
+#            - ./:/var/www/html/controle-tarefas/
+#        networks:
+#            - default
     db:
         image: mysql:8.0
         container_name: 'ct_mysql'
